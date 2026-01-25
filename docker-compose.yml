@@ -1,0 +1,53 @@
+version: '3.8'
+
+services:
+  # Backend API Server
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: doctor-agent-backend
+    ports:
+      - "8000:8000"
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - OPENAI_MODEL=${OPENAI_MODEL:-gpt-4o}
+      - HOST=0.0.0.0
+      - PORT=8000
+    volumes:
+      - ./backend:/app/backend
+      - ./data:/app/data
+      - ./skills:/app/skills
+      - ./prompts:/app/prompts
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import requests; requests.get('http://localhost:8000/api/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    networks:
+      - doctor-agent-network
+
+  # Frontend Web Server
+  frontend:
+    image: python:3.10-slim
+    container_name: doctor-agent-frontend
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app
+    working_dir: /app
+    command: python -m http.server 3000
+    restart: unless-stopped
+    depends_on:
+      - backend
+    networks:
+      - doctor-agent-network
+
+networks:
+  doctor-agent-network:
+    driver: bridge
+
+volumes:
+  backend_data:

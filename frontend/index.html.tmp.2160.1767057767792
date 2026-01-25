@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Doctor Agent - 의료 AI 상담</title>
+    <style>
+        :root {
+            --primary: #0066cc;
+            --primary-light: #e6f2ff;
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+            --gray-100: #f8f9fa;
+            --gray-200: #e9ecef;
+            --gray-600: #6c757d;
+            --gray-800: #343a40;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 20px;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 0.95rem;
+        }
+
+        .warning-banner {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .warning-banner .icon {
+            font-size: 1.5rem;
+        }
+
+        .warning-banner .text {
+            font-size: 0.9rem;
+            color: #856404;
+        }
+
+        .chat-container {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+
+        .chat-header {
+            background: var(--primary);
+            color: white;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .chat-header .avatar {
+            width: 40px;
+            height: 40px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .chat-header .info h2 {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .chat-header .info p {
+            font-size: 0.8rem;
+            opacity: 0.9;
+        }
+
+        .status-indicator {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.85rem;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: #4ade80;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .chat-messages {
+            height: 450px;
+            overflow-y: auto;
+            padding: 20px;
+            background: var(--gray-100);
+        }
+
+        .message {
+            margin-bottom: 16px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .message.user {
+            flex-direction: row-reverse;
+        }
+
+        .message .avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        .message.assistant .avatar {
+            background: var(--primary-light);
+        }
+
+        .message.user .avatar {
+            background: var(--gray-200);
+        }
+
+        .message .content {
+            max-width: 70%;
+            padding: 12px 16px;
+            border-radius: 16px;
+            line-height: 1.5;
+        }
+
+        .message.assistant .content {
+            background: white;
+            border: 1px solid var(--gray-200);
+            border-radius: 16px 16px 16px 4px;
+        }
+
+        .message.user .content {
+            background: var(--primary);
+            color: white;
+            border-radius: 16px 16px 4px 16px;
+        }
+
+        .message .content h3 {
+            font-size: 1rem;
+            margin-bottom: 8px;
+            color: var(--primary);
+        }
+
+        .message .content ul {
+            margin-left: 20px;
+            margin-top: 8px;
+        }
+
+        .message .content li {
+            margin-bottom: 4px;
+        }
+
+        .message .content code {
+            background: var(--gray-200);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.9em;
+        }
+
+        .log-entry {
+            background: var(--gray-200);
+            border-radius: 8px;
+            padding: 10px 14px;
+            margin-bottom: 10px;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .log-entry.discovery { border-left: 3px solid #6366f1; }
+        .log-entry.activation { border-left: 3px solid #8b5cf6; }
+        .log-entry.tool_call { border-left: 3px solid #0ea5e9; }
+        .log-entry.tool_result { border-left: 3px solid #22c55e; }
+        .log-entry.complete { border-left: 3px solid #10b981; }
+        .log-entry.error { border-left: 3px solid #ef4444; }
+
+        .log-entry .step {
+            font-weight: 600;
+            color: var(--gray-600);
+        }
+
+        .chat-input {
+            padding: 16px 20px;
+            background: white;
+            border-top: 1px solid var(--gray-200);
+            display: flex;
+            gap: 12px;
+        }
+
+        .chat-input input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 2px solid var(--gray-200);
+            border-radius: 24px;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .chat-input input:focus {
+            border-color: var(--primary);
+        }
+
+        .chat-input button {
+            padding: 12px 24px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 24px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .chat-input button:hover {
+            background: #0052a3;
+        }
+
+        .chat-input button:disabled {
+            background: var(--gray-600);
+            cursor: not-allowed;
+        }
+
+        .quick-symptoms {
+            padding: 12px 20px;
+            background: var(--gray-100);
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .quick-symptoms button {
+            padding: 8px 14px;
+            background: white;
+            border: 1px solid var(--gray-200);
+            border-radius: 20px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .quick-symptoms button:hover {
+            background: var(--primary-light);
+            border-color: var(--primary);
+        }
+
+        .typing-indicator {
+            display: flex;
+            gap: 4px;
+            padding: 12px 16px;
+        }
+
+        .typing-indicator span {
+            width: 8px;
+            height: 8px;
+            background: var(--gray-600);
+            border-radius: 50%;
+            animation: typing 1.4s infinite;
+        }
+
+        .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
+        .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes typing {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-4px); }
+        }
+
+        /* Markdown 스타일 */
+        .message .content h2 {
+            font-size: 1.1rem;
+            margin-top: 16px;
+            margin-bottom: 8px;
+            color: var(--gray-800);
+        }
+
+        .message .content h3 {
+            font-size: 1rem;
+            margin-top: 12px;
+            margin-bottom: 6px;
+        }
+
+        .message .content p {
+            margin-bottom: 8px;
+        }
+
+        .message .content strong {
+            color: var(--primary);
+        }
+
+        .severity-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .severity-mild { background: #dcfce7; color: #166534; }
+        .severity-moderate { background: #fef9c3; color: #854d0e; }
+        .severity-severe { background: #fee2e2; color: #991b1b; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏥 AI Doctor Agent</h1>
+            <p>AI 기반 의료 상담 서비스 (데모)</p>
+        </div>
+
+        <div class="warning-banner">
+            <span class="icon">⚠️</span>
+            <span class="text">
+                <strong>주의:</strong> 본 서비스는 AI 보조 진단 데모입니다.
+                실제 의료 진단을 대체하지 않으며, 증상이 있으시면 반드시 전문의와 상담하세요.
+            </span>
+        </div>
+
+        <div class="chat-container">
+            <div class="chat-header">
+                <div class="avatar">🤖</div>
+                <div class="info">
+                    <h2>AI Doctor</h2>
+                    <p>의료 AI 상담 에이전트</p>
+                </div>
+                <div class="status-indicator">
+                    <span class="status-dot"></span>
+                    <span>온라인</span>
+                </div>
+            </div>
+
+            <div class="quick-symptoms">
+                <span style="color: #666; font-size: 0.85rem;">빠른 증상 선택:</span>
+                <button onclick="setSymptom('허리가 아프고 다리가 저려요')">허리 통증</button>
+                <button onclick="setSymptom('무릎이 아프고 걸을 때 삐걱거려요')">무릎 통증</button>
+                <button onclick="setSymptom('두통이 심하고 메스꺼워요')">두통</button>
+                <button onclick="setSymptom('어깨가 아프고 팔을 올리기 힘들어요')">어깨 통증</button>
+            </div>
+
+            <div class="chat-messages" id="chatMessages">
+                <div class="message assistant">
+                    <div class="avatar">🤖</div>
+                    <div class="content">
+                        <p>안녕하세요! AI Doctor Agent입니다. 👋</p>
+                        <p>어떤 증상이 있으신가요? 자세히 말씀해 주시면 도움을 드리겠습니다.</p>
+                        <p style="margin-top: 12px; font-size: 0.9rem; color: #666;">
+                            예시: "허리가 아프고 다리가 저려요. 2주 정도 됐어요."
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chat-input">
+                <input
+                    type="text"
+                    id="messageInput"
+                    placeholder="증상을 입력하세요..."
+                    onkeypress="handleKeyPress(event)"
+                >
+                <button id="sendButton" onclick="sendMessage()">전송</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:8000';
+        let isProcessing = false;
+
+        function setSymptom(symptom) {
+            document.getElementById('messageInput').value = symptom;
+            document.getElementById('messageInput').focus();
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === 'Enter' && !isProcessing) {
+                sendMessage();
+            }
+        }
+
+        async function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const message = input.value.trim();
+
+            if (!message || isProcessing) return;
+
+            isProcessing = true;
+            document.getElementById('sendButton').disabled = true;
+            input.value = '';
+
+            // 사용자 메시지 추가
+            addMessage('user', message);
+
+            // 타이핑 인디케이터 추가
+            const typingId = addTypingIndicator();
+
+            try {
+                const response = await fetch(`${API_URL}/api/chat`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message, patient_id: 'P001' })
+                });
+
+                const reader = response.body.getReader();
+                const decoder = new TextDecoder();
+                let assistantContent = '';
+
+                // 로그 컨테이너 생성
+                const logContainer = document.createElement('div');
+                logContainer.className = 'logs-container';
+                document.getElementById('chatMessages').appendChild(logContainer);
+
+                while (true) {
+                    const { done, value } = await reader.read();
+                    if (done) break;
+
+                    const text = decoder.decode(value);
+                    const lines = text.split('\n').filter(line => line.trim());
+
+                    for (const line of lines) {
+                        try {
+                            const event = JSON.parse(line);
+
+                            if (event.type === 'log') {
+                                // 타이핑 인디케이터 제거
+                                removeTypingIndicator(typingId);
+
+                                // 로그 이벤트 표시
+                                addLogEntry(logContainer, event.data);
+                            } else if (event.type === 'response') {
+                                // 최종 응답
+                                assistantContent = event.data.content;
+                            }
+                        } catch (e) {
+                            console.error('Parse error:', e);
+                        }
+                    }
+                }
+
+                // 로그 컨테이너 제거 (선택사항)
+                // logContainer.remove();
+
+                // 최종 응답 추가
+                if (assistantContent) {
+                    addMessage('assistant', assistantContent);
+                }
+
+            } catch (error) {
+                console.error('Error:', error);
+                removeTypingIndicator(typingId);
+                addMessage('assistant', '죄송합니다. 서버 연결에 문제가 발생했습니다. 잠시 후 다시 시도해주세요.');
+            }
+
+            isProcessing = false;
+            document.getElementById('sendButton').disabled = false;
+            scrollToBottom();
+        }
+
+        function addMessage(type, content) {
+            const messagesDiv = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${type}`;
+
+            const avatar = type === 'user' ? '👤' : '🤖';
+
+            // 마크다운 기본 변환
+            let formattedContent = content
+                .replace(/^## (.*$)/gm, '<h2>$1</h2>')
+                .replace(/^### (.*$)/gm, '<h3>$1</h3>')
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                .replace(/^- (.*$)/gm, '<li>$1</li>')
+                .replace(/(<li>.*<\/li>)/s, '<ul>$1</ul>')
+                .replace(/\n/g, '<br>')
+                .replace(/🟢/g, '<span class="severity-badge severity-mild">🟢 경증</span>')
+                .replace(/🟡/g, '<span class="severity-badge severity-moderate">🟡 중등증</span>')
+                .replace(/🔴/g, '<span class="severity-badge severity-severe">🔴 중증</span>');
+
+            messageDiv.innerHTML = `
+                <div class="avatar">${avatar}</div>
+                <div class="content">${formattedContent}</div>
+            `;
+
+            messagesDiv.appendChild(messageDiv);
+            scrollToBottom();
+        }
+
+        function addLogEntry(container, data) {
+            const logDiv = document.createElement('div');
+            logDiv.className = `log-entry ${data.step}`;
+            logDiv.innerHTML = `
+                <span class="step">${data.step.toUpperCase()}</span>
+                <span>${data.message}</span>
+            `;
+            container.appendChild(logDiv);
+            scrollToBottom();
+        }
+
+        function addTypingIndicator() {
+            const id = 'typing-' + Date.now();
+            const messagesDiv = document.getElementById('chatMessages');
+            const typingDiv = document.createElement('div');
+            typingDiv.id = id;
+            typingDiv.className = 'message assistant';
+            typingDiv.innerHTML = `
+                <div class="avatar">🤖</div>
+                <div class="content">
+                    <div class="typing-indicator">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </div>
+            `;
+            messagesDiv.appendChild(typingDiv);
+            scrollToBottom();
+            return id;
+        }
+
+        function removeTypingIndicator(id) {
+            const typing = document.getElementById(id);
+            if (typing) typing.remove();
+        }
+
+        function scrollToBottom() {
+            const messagesDiv = document.getElementById('chatMessages');
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+    </script>
+</body>
+</html>
