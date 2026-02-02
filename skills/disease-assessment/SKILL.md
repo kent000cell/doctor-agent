@@ -1,6 +1,6 @@
 ---
 name: disease-assessment
-description: 질병 진행 단계 평가. 경증/중등증/중증 판단, 긴급도 분류, 위험 요소 체크.
+description: Assess disease progression stage. Determine mild/moderate/severe, classify urgency, check risk factors.
 license: Apache-2.0
 metadata:
   author: doctor-agent
@@ -9,56 +9,56 @@ metadata:
 allowed-tools: assess_severity, check_risk_factors
 ---
 
-# 질병 평가 스킬
+# Disease Assessment Skill
 
-## 개요
-증상 분석과 영상 분석 결과를 종합하여 질병의 심각도와 진행 단계를 평가합니다.
+## Overview
+Integrate symptom and imaging analysis results to assess disease severity and progression stage.
 
-## 사용 시점
-- 증상 분석 + 영상 분석 완료 후
-- 질병 진행 단계 파악이 필요할 때
-- 치료 방향 결정 전 심각도 평가 시
+## When to Use
+- After completing symptom and imaging analysis
+- When disease progression needs to be determined
+- Before deciding treatment direction for severity assessment
 
-## 사용 도구
-| 도구 | 설명 |
-|------|------|
-| `assess_severity` | 질병 심각도 평가 (경증/중등증/중증) |
-| `check_risk_factors` | 위험 요소 체크 (나이, 기저질환 등) |
+## Available Tools
+| Tool | Description |
+|------|-------------|
+| `assess_severity` | Assess disease severity (mild/moderate/severe) |
+| `check_risk_factors` | Check risk factors (age, underlying conditions) |
 
-## 작업 흐름
-1. 증상 분석 결과 + 영상 분석 결과 수집
-2. `assess_severity`로 심각도 판단
-3. `check_risk_factors`로 위험 요소 확인
-4. 종합 평가 리포트 생성
+## Workflow
+1. Collect symptom analysis + imaging analysis results
+2. Determine severity using `assess_severity`
+3. Check risk factors with `check_risk_factors`
+4. Generate comprehensive assessment report
 
-## 심각도 분류 기준
+## Severity Classification Criteria
 
-### 경증 (Mild)
-- 일상생활 가능
-- 약물치료로 호전 가능
-- 긴급 치료 불필요
+### Mild
+- Daily activities possible
+- Improves with medication
+- No urgent treatment needed
 
-### 중등증 (Moderate)
-- 일상생활 지장
-- 적극적 치료 필요
-- 전문의 상담 권장
+### Moderate
+- Daily activities affected
+- Active treatment required
+- Consultation with specialist recommended
 
-### 중증 (Severe)
-- 일상생활 불가
-- 즉각적 치료 필요
-- 수술 또는 입원 고려
+### Severe
+- Daily activities impossible
+- Immediate treatment required
+- Surgery or hospitalization considered
 
-## 위험 요소 체크리스트
-- [ ] 고령 (65세 이상)
-- [ ] 당뇨병
-- [ ] 고혈압
-- [ ] 심혈관 질환
-- [ ] 면역 저하
-- [ ] 흡연
-- [ ] 비만
+## Risk Factors Checklist
+- [ ] Elderly (65+)
+- [ ] Diabetes
+- [ ] Hypertension
+- [ ] Cardiovascular disease
+- [ ] Immunocompromised
+- [ ] Smoking
+- [ ] Obesity
 
-## 응답 형식
-- 예상 진단명
-- 심각도 등급
-- 위험 요소 목록
-- 긴급도 분류 (응급/준응급/비응급)
+## Response Format
+- Suspected diagnosis
+- Severity grade
+- List of risk factors
+- Urgency classification (emergency/urgent/non-urgent)

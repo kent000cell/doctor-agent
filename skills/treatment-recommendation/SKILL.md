@@ -1,6 +1,6 @@
 ---
 name: treatment-recommendation
-description: 수술/비수술 판단, 약물 치료, 물리치료 등 치료법 추천. 치료 옵션 비교.
+description: Determine surgical/non-surgical approach, recommend medication, physical therapy. Compare treatment options.
 license: Apache-2.0
 metadata:
   author: doctor-agent
@@ -9,75 +9,75 @@ metadata:
 allowed-tools: recommend_treatment, get_medication_options, get_surgery_options
 ---
 
-# 치료 추천 스킬
+# Treatment Recommendation Skill
 
-## 개요
-진단 결과와 심각도 평가를 바탕으로 최적의 치료법을 추천합니다.
+## Overview
+Recommend optimal treatment based on diagnosis results and severity assessment.
 
-## 사용 시점
-- 진단 및 심각도 평가 완료 후
-- 치료 방향 결정이 필요할 때
-- 환자에게 치료 옵션 설명 시
+## When to Use
+- After completing diagnosis and severity assessment
+- When treatment direction needs to be decided
+- When explaining treatment options to patient
 
-## 사용 도구
-| 도구 | 설명 |
-|------|------|
-| `recommend_treatment` | 종합 치료법 추천 |
-| `get_medication_options` | 약물 치료 옵션 조회 |
-| `get_surgery_options` | 수술 옵션 조회 |
+## Available Tools
+| Tool | Description |
+|------|-------------|
+| `recommend_treatment` | Comprehensive treatment recommendation |
+| `get_medication_options` | Retrieve medication treatment options |
+| `get_surgery_options` | Retrieve surgical options |
 
-## 작업 흐름
-1. 진단명 + 심각도 확인
-2. `recommend_treatment`로 치료 방향 결정
-3. 필요시 `get_medication_options` 또는 `get_surgery_options` 호출
-4. 치료 옵션 비교 및 추천
+## Workflow
+1. Confirm diagnosis + severity
+2. Decide treatment direction with `recommend_treatment`
+3. Call `get_medication_options` or `get_surgery_options` if needed
+4. Compare and recommend treatment options
 
-## 치료 결정 기준
+## Treatment Decision Criteria
 
-### 비수술 치료 우선
-| 심각도 | 치료법 |
-|--------|--------|
-| 경증 | 약물치료 + 생활습관 개선 |
-| 중등증 | 약물치료 + 물리치료 + 주사치료 |
+### Non-Surgical Treatment Priority
+| Severity | Treatment |
+|----------|-----------|
+| Mild | Medication + lifestyle modification |
+| Moderate | Medication + physical therapy + injections |
 
-### 수술 치료 고려
-| 조건 | 수술 고려 |
-|------|----------|
-| 보존적 치료 6주 이상 실패 | O |
-| 신경 손상 진행 | O |
-| 마비 증상 | O (긴급) |
-| 통증 조절 불가 | O |
+### Surgical Treatment Consideration
+| Condition | Surgery Considered |
+|-----------|-------------------|
+| Conservative treatment failure (6+ weeks) | Yes |
+| Progressive nerve damage | Yes |
+| Paralysis symptoms | Yes (urgent) |
+| Uncontrollable pain | Yes |
 
-## 치료 옵션 분류
+## Treatment Option Categories
 
-### 약물 치료
-- 소염진통제 (NSAIDs)
-- 근이완제
-- 신경통 약물
-- 스테로이드
+### Medication Treatment
+- Anti-inflammatory drugs (NSAIDs)
+- Muscle relaxants
+- Neuropathic pain medications
+- Steroids
 
-### 비약물 치료
-- 물리치료
-- 도수치료
-- 운동치료
-- 침/한방치료
+### Non-Medication Treatment
+- Physical therapy
+- Manual therapy
+- Exercise therapy
+- Acupuncture
 
-### 주사 치료
-- 경막외 스테로이드 주사
-- 신경차단술
-- 프롤로치료
+### Injection Treatment
+- Epidural steroid injection
+- Nerve block
+- Prolotherapy
 
-### 수술 치료
-- 최소침습 수술
-- 내시경 수술
-- 개방성 수술
+### Surgical Treatment
+- Minimally invasive surgery
+- Endoscopic surgery
+- Open surgery
 
-## 응답 형식
-- 추천 치료 방향 (수술/비수술)
-- 1차 치료 옵션 (상세)
-- 2차 치료 옵션 (대안)
-- 예상 치료 기간
-- 주의사항 및 금기사항
+## Response Format
+- Recommended treatment direction (surgical/non-surgical)
+- Primary treatment option (detailed)
+- Secondary treatment option (alternative)
+- Expected treatment duration
+- Precautions and contraindications
 
-## 필수 안내 문구
-⚠️ 본 내용은 AI 보조 진단으로, 최종 치료 결정은 반드시 전문의와 상담하세요.
+## Required Disclaimer
+⚠️ This is AI-assisted diagnosis. Final treatment decisions must be made in consultation with a healthcare professional.

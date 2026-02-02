@@ -1,6 +1,6 @@
 ---
 name: symptom-analysis
-description: 환자의 통증, 불편함, 증상을 분석. 통증 위치, 강도, 지속기간, 특성 파악.
+description: Analyze patient pain, discomfort, and symptoms. Identify pain location, intensity, duration, and characteristics.
 license: Apache-2.0
 metadata:
   author: doctor-agent
@@ -9,45 +9,45 @@ metadata:
 allowed-tools: analyze_symptoms, get_patient_history
 ---
 
-# 증상 분석 스킬
+# Symptom Analysis Skill
 
-## 개요
-환자가 호소하는 증상을 체계적으로 분석하여 진단에 필요한 정보를 수집합니다.
+## Overview
+Systematically analyze patient symptoms to gather diagnostic information.
 
-## 사용 시점
-- 환자가 통증/불편함을 호소할 때
-- "허리가 아파요", "두통이 있어요", "무릎이 쑤셔요" 같은 요청
-- 초진 시 증상 파악이 필요할 때
+## When to Use
+- When patient describes pain/discomfort
+- For requests like "My back hurts", "I have a headache", "My knee aches"
+- When initial symptom assessment is needed
 
-## 사용 도구
-| 도구 | 설명 |
-|------|------|
-| `analyze_symptoms` | 증상 분석 - 위치, 강도, 특성 파악 |
-| `get_patient_history` | 환자 과거 병력 조회 |
+## Available Tools
+| Tool | Description |
+|------|-------------|
+| `analyze_symptoms` | Symptom analysis - identify location, intensity, characteristics |
+| `get_patient_history` | Retrieve patient medical history |
 
-## 작업 흐름
-1. 환자 증상 텍스트에서 핵심 정보 추출
-2. `analyze_symptoms`로 증상 분류 및 분석
-3. 필요시 `get_patient_history`로 과거 병력 확인
-4. 연관 증상 및 위험 신호 파악
+## Workflow
+1. Extract key information from patient symptom text
+2. Classify and analyze symptoms using `analyze_symptoms`
+3. Check medical history with `get_patient_history` if needed
+4. Identify related symptoms and red flags
 
-## 증상 분류 기준
+## Symptom Classification
 
-### 통증 강도 (Pain Scale)
-| 점수 | 설명 |
-|------|------|
-| 1-3 | 경증 - 일상생활 가능 |
-| 4-6 | 중등증 - 일상생활 지장 |
-| 7-10 | 중증 - 즉각적 치료 필요 |
+### Pain Intensity (Pain Scale)
+| Score | Description |
+|-------|-------------|
+| 1-3 | Mild - Daily activities possible |
+| 4-6 | Moderate - Daily activities affected |
+| 7-10 | Severe - Immediate treatment needed |
 
-### 통증 특성
-- **둔통**: 묵직하고 지속적인 통증
-- **찌르는 통증**: 날카롭고 국소적
-- **방사통**: 다른 부위로 퍼지는 통증
-- **박동성 통증**: 맥박처럼 욱신거림
+### Pain Characteristics
+- **Dull pain**: Heavy, persistent pain
+- **Sharp pain**: Acute, localized pain
+- **Radiating pain**: Pain spreading to other areas
+- **Throbbing pain**: Pulsating pain
 
-## 응답 형식
-- 주요 증상 요약
-- 통증 위치 및 강도
-- 동반 증상 목록
-- 위험 신호 여부 (Red Flags)
+## Response Format
+- Summary of main symptoms
+- Pain location and intensity
+- List of associated symptoms
+- Red flag presence

@@ -1,28 +1,28 @@
 # AI Doctor Agent
 
-> Agent Skills 기반 의료 AI 상담 에이전트 - 프로덕션급 프로토타입
+> Agent Skills-Based Medical AI Consultation System - Production-Ready Prototype
 
 [![Python](https://img.shields.io/badge/Python-3.10+-blue.svg)](https://www.python.org/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.100+-green.svg)](https://fastapi.tiangolo.com/)
 [![OpenAI](https://img.shields.io/badge/OpenAI-GPT--4o-orange.svg)](https://openai.com/)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 
-## 개요
+## Overview
 
-AI Doctor Agent는 **Agent Skills 스펙**을 준수하여 구현된 의료 AI 상담 시스템입니다. 환자의 증상을 분석하고, 의료 영상을 해석하며, 적절한 치료법을 추천하는 AI 에이전트입니다.
+AI Doctor Agent is a medical AI consultation system built following **Agent Skills specification**. It analyzes patient symptoms, interprets medical images, and recommends appropriate treatments using AI technology.
 
-**주요 특징:**
-- 🏥 **멀티모달 진단**: 텍스트 증상 + 이미지 분석 (GPT-4o Vision)
-- 🔧 **Agent Skills 스펙 준수**: Progressive Disclosure 패턴 구현
-- ⚡ **실시간 스트리밍**: SSE를 통한 진단 과정 실시간 표시
-- 🛠️ **10개 의료 도구**: Function Calling 기반 체계적 진단
-- 📚 **4개 전문 스킬**: 증상분석, 영상분석, 질병평가, 치료추천
+**Key Features:**
+- 🏥 **Multimodal Diagnosis**: Text symptoms + Image analysis (GPT-4o Vision)
+- 🔧 **Agent Skills Compliant**: Progressive Disclosure pattern implementation
+- ⚡ **Real-time Streaming**: Live diagnostic process via SSE
+- 🛠️ **10 Medical Tools**: Systematic diagnosis via Function Calling
+- 📚 **4 Specialized Skills**: Symptom analysis, imaging, assessment, treatment
 
-⚠️ **주의**: 본 시스템은 AI 보조 진단 데모로, 실제 의료 진단을 대체하지 않습니다.
+⚠️ **Disclaimer**: This system is an AI-assisted diagnostic demo and does not replace actual medical diagnosis.
 
 ---
 
-## 아키텍처
+## Architecture
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -48,38 +48,38 @@ AI Doctor Agent는 **Agent Skills 스펙**을 준수하여 구현된 의료 AI �
                         │
                         ▼
 ┌─────────────────────────────────────────────────────────────┐
-│                   Agent Skills (4개)                        │
+│                   Agent Skills (4 modules)                  │
 │  symptom-analysis │ imaging-analysis │ disease-assessment  │
 │                   treatment-recommendation                  │
 └─────────────────────────────────────────────────────────────┘
 ```
 
-### Agent Skills 동작 흐름
+### Agent Skills Workflow
 
 ```
 1. Discovery Phase
-   └─ 시스템 프롬프트에 스킬 메타데이터 XML 주입
+   └─ Inject skill metadata XML into system prompt
 
 2. Activation Phase
-   └─ LLM이 read_skill 도구로 필요한 스킬 전체 내용 로드
+   └─ LLM loads full skill content via read_skill tool
 
 3. Execution Phase
-   └─ LLM이 스킬 지침에 따라 10개 의료 도구 실행
-      ├─ analyze_symptoms (증상 분석)
-      ├─ analyze_xray/mri/ct (영상 분석)
-      ├─ assess_severity (심각도 평가)
-      └─ recommend_treatment (치료 추천)
+   └─ LLM executes 10 medical tools following skill guidelines
+      ├─ analyze_symptoms (symptom analysis)
+      ├─ analyze_xray/mri/ct (imaging analysis)
+      ├─ assess_severity (severity assessment)
+      └─ recommend_treatment (treatment recommendation)
 ```
 
 ---
 
-## 기술 스택
+## Tech Stack
 
 ### Backend
 - **Framework**: FastAPI 0.100+
 - **LLM**: OpenAI GPT-4o (Function Calling + Vision)
 - **Streaming**: Server-Sent Events (SSE)
-- **Data**: Mock Data Source (프로토타입용)
+- **Data**: Mock Data Source (for prototype)
 
 ### Frontend
 - **UI**: Vanilla JavaScript + HTML5
@@ -93,68 +93,68 @@ AI Doctor Agent는 **Agent Skills 스펙**을 준수하여 구현된 의료 AI �
 
 ---
 
-## 빠른 시작
+## Quick Start
 
-### 사전 요구사항
-- Python 3.10 이상
+### Prerequisites
+- Python 3.10 or higher
 - OpenAI API Key
-- (선택) Docker & Docker Compose
+- (Optional) Docker & Docker Compose
 
-### 로컬 실행
+### Local Setup
 
 ```bash
-# 1. 저장소 클론
-git clone https://github.com/yourusername/doctor-agent.git
+# 1. Clone repository
+git clone https://github.com/kent000cell/doctor-agent.git
 cd doctor-agent
 
-# 2. OpenAI API 키 설정
+# 2. Set OpenAI API key
 export OPENAI_API_KEY="your-api-key-here"
 
-# 3. 전체 시스템 실행 (가상환경 자동 생성 + 서버 실행)
+# 3. Run entire system (auto-creates venv + installs deps + starts servers)
 python run.py
 ```
 
-브라우저에서 자동으로 `http://localhost:3000` 열림
+Browser automatically opens at `http://localhost:3000`
 
-### Docker 실행
+### Docker Setup
 
 ```bash
-# Docker Compose로 실행
+# Run with Docker Compose
 docker-compose up -d
 
-# 접속
+# Access
 open http://localhost:3000
 ```
 
 ---
 
-## 프로젝트 구조
+## Project Structure
 
 ```
 doctor-agent/
-├── backend/                 # FastAPI 백엔드
-│   ├── main.py             # API 서버 (SSE 스트리밍)
-│   ├── config.py           # 설정 관리
-│   ├── skill_loader.py     # Agent Skills 로더
+├── backend/                 # FastAPI backend
+│   ├── main.py             # API server (SSE streaming)
+│   ├── config.py           # Configuration management
+│   ├── skill_loader.py     # Agent Skills loader
 │   └── tools/
-│       ├── definitions.py  # OpenAI Function 정의
-│       └── registry.py     # 도구 실행 엔진
-├── frontend/               # 프론트엔드
-│   └── index.html          # 채팅 UI (Vanilla JS)
-├── skills/                 # Agent Skills (4개)
+│       ├── definitions.py  # OpenAI Function definitions
+│       └── registry.py     # Tool execution engine
+├── frontend/               # Frontend
+│   └── index.html          # Chat UI (Vanilla JS)
+├── skills/                 # Agent Skills (4 modules)
 │   ├── symptom-analysis/
 │   ├── imaging-analysis/
 │   ├── disease-assessment/
 │   └── treatment-recommendation/
-├── data/                   # 목업 데이터
+├── data/                   # Mock data
 │   └── mock_data.py
-├── tests/                  # 테스트 코드
+├── tests/                  # Test suite
 │   ├── test_api.py
 │   ├── test_skills.py
 │   └── test_tools.py
-├── prompts/                # 시스템 프롬프트
+├── prompts/                # System prompts
 │   └── system.md
-├── run.py                  # 원클릭 실행 스크립트
+├── run.py                  # One-click launcher
 ├── Dockerfile
 ├── docker-compose.yml
 └── README.md
@@ -162,41 +162,41 @@ doctor-agent/
 
 ---
 
-## 주요 기능
+## Key Features
 
-### 1. 증상 분석
-- 통증 위치, 강도(1-10), 지속기간 파악
-- 통증 유형 분류 (둔통/찌르는/방사통/박동성/화끈거림)
-- Red Flags 감지 (응급 상황)
+### 1. Symptom Analysis
+- Pain location, intensity (1-10), duration tracking
+- Pain type classification (dull/sharp/radiating/throbbing/burning)
+- Red flag detection (emergency situations)
 
-### 2. 영상 분석
-- **X-ray**: 골절, 디스크 간격, 관절염
-- **MRI**: 디스크 탈출, 인대 손상, 신경 압박
-- **CT**: 뇌출혈, 복부 장기, 폐색전
+### 2. Medical Imaging Analysis
+- **X-ray**: Fractures, disc spacing, arthritis
+- **MRI**: Disc herniation, ligament damage, nerve compression
+- **CT**: Brain hemorrhage, abdominal organs, pulmonary embolism
 
-### 3. 질병 평가
-- 심각도 분류: 경증 / 중등증 / 중증
-- 긴급도 판단: 응급 / 준응급 / 비응급
-- 위험 요소 체크 (나이, 기저질환)
+### 3. Disease Assessment
+- Severity classification: Mild / Moderate / Severe
+- Urgency determination: Emergency / Urgent / Non-urgent
+- Risk factor evaluation (age, underlying conditions)
 
-### 4. 치료 추천
-- 약물 치료 옵션 (성분, 용법, 주의사항)
-- 수술 치료 옵션 (방법, 장단점, 회복기간)
-- 생활습관 권고
+### 4. Treatment Recommendations
+- Medication options (ingredients, dosage, warnings)
+- Surgical options (methods, pros/cons, recovery time)
+- Lifestyle recommendations
 
 ---
 
-## API 엔드포인트
+## API Endpoints
 
 ### `POST /api/chat`
-채팅 메시지 전송 (SSE 스트리밍 응답)
+Send chat message (SSE streaming response)
 
 **Request:**
 ```json
 {
-  "message": "허리가 아프고 다리가 저려요",
+  "message": "I have back pain and leg numbness",
   "patient_id": "P001",
-  "image": "data:image/jpeg;base64,..." // 선택사항
+  "image": "data:image/jpeg;base64,..." // optional
 }
 ```
 
@@ -205,83 +205,83 @@ doctor-agent/
 {"type": "log", "data": {"step": "discovery", "message": "..."}}
 {"type": "log", "data": {"step": "activation", "message": "..."}}
 {"type": "log", "data": {"step": "tool_call", "message": "..."}}
-{"type": "response", "data": {"content": "진단 결과..."}}
+{"type": "response", "data": {"content": "Diagnosis result..."}}
 ```
 
 ### `GET /api/skills`
-사용 가능한 스킬 목록 조회
+Get available skills list
 
 ### `GET /api/health`
-헬스체크
+Health check endpoint
 
 ---
 
-## 테스트
+## Testing
 
 ```bash
-# 테스트 실행
+# Run tests
 pytest
 
-# 커버리지 포함
+# With coverage
 pytest --cov=backend --cov-report=html
 
-# 특정 테스트만 실행
+# Specific test
 pytest tests/test_api.py -v
 ```
 
 ---
 
-## 환경 변수
+## Environment Variables
 
 ```bash
-# 필수
+# Required
 OPENAI_API_KEY=your-api-key-here
 
-# 선택 (기본값 있음)
-OPENAI_MODEL=gpt-4o          # 사용할 모델
-HOST=0.0.0.0                  # 서버 호스트
-PORT=8000                     # 서버 포트
+# Optional (defaults available)
+OPENAI_MODEL=gpt-4o          # Model to use
+HOST=0.0.0.0                  # Server host
+PORT=8000                     # Server port
 ```
 
 ---
 
-## 개발 로드맵
+## Development Roadmap
 
-- [x] Agent Skills 스펙 구현
-- [x] 멀티모달 지원 (텍스트 + 이미지)
-- [x] SSE 스트리밍
-- [x] Docker 컨테이너화
-- [x] 테스트 코드 작성
-- [ ] PostgreSQL 연동 (대화 히스토리)
-- [ ] 사용자 인증 (JWT)
-- [ ] 실제 의료 데이터 API 연동
-- [ ] RAG 기반 의학 지식베이스
+- [x] Agent Skills specification implementation
+- [x] Multimodal support (text + image)
+- [x] SSE streaming
+- [x] Docker containerization
+- [x] Test suite
+- [ ] PostgreSQL integration (conversation history)
+- [ ] User authentication (JWT)
+- [ ] Real medical data API integration
+- [ ] RAG-based medical knowledge base
 
 ---
 
-## 라이선스
+## License
 
 Apache License 2.0
 
 ---
 
-## 주의사항
+## Disclaimer
 
-⚠️ **본 시스템은 교육 및 연구 목적의 프로토타입입니다.**
+⚠️ **This system is a prototype for educational and research purposes.**
 
-- 실제 의료 진단을 대체하지 않습니다
-- 응급 상황 시 즉시 119 또는 가까운 응급실로 가세요
-- 모든 의료 결정은 반드시 전문 의료진과 상담 후 결정하세요
-- 목업 데이터를 사용하므로 실제 환자 데이터와 다릅니다
-
----
-
-## 기여
-
-기여는 언제나 환영합니다! 이슈나 PR을 자유롭게 제출해주세요.
+- Does not replace actual medical diagnosis
+- For emergencies, call 911 or visit nearest emergency room immediately
+- All medical decisions must be made in consultation with healthcare professionals
+- Uses mock data, not actual patient data
 
 ---
 
-## 문의
+## Contributing
 
-프로젝트 관련 문의: [your.email@example.com](mailto:your.email@example.com)
+Contributions are welcome! Feel free to submit issues or PRs.
+
+---
+
+## Contact
+
+Project inquiries: [your.email@example.com](mailto:your.email@example.com)

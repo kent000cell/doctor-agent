@@ -1,6 +1,6 @@
 ---
 name: imaging-analysis
-description: X-ray, CT, MRI 등 의료 영상 분석. 골절, 디스크, 종양 등 이상 소견 탐지.
+description: Analyze medical imaging such as X-ray, CT, MRI. Detect abnormalities like fractures, disc issues, tumors.
 license: Apache-2.0
 metadata:
   author: doctor-agent
@@ -9,55 +9,55 @@ metadata:
 allowed-tools: analyze_xray, analyze_mri, analyze_ct
 ---
 
-# 의료 영상 분석 스킬
+# Medical Imaging Analysis Skill
 
-## 개요
-X-ray, CT, MRI 등 의료 영상을 분석하여 이상 소견을 탐지하고 진단을 보조합니다.
+## Overview
+Analyze X-ray, CT, MRI and other medical images to detect abnormalities and assist in diagnosis.
 
-## 사용 시점
-- 환자가 X-ray, CT, MRI 이미지를 제공할 때
-- 영상 기반 진단이 필요할 때
-- 골절, 디스크, 종양 등 구조적 이상 확인 시
+## When to Use
+- When patient provides X-ray, CT, or MRI images
+- When image-based diagnosis is required
+- To check for structural abnormalities like fractures, disc issues, tumors
 
-## 사용 도구
-| 도구 | 설명 |
-|------|------|
-| `analyze_xray` | X-ray 분석 - 골절, 관절, 폐 등 |
-| `analyze_mri` | MRI 분석 - 연부조직, 디스크, 뇌 |
-| `analyze_ct` | CT 분석 - 복부, 흉부, 뇌출혈 |
+## Available Tools
+| Tool | Description |
+|------|-------------|
+| `analyze_xray` | X-ray analysis - fractures, joints, lungs |
+| `analyze_mri` | MRI analysis - soft tissues, discs, brain |
+| `analyze_ct` | CT analysis - abdomen, chest, brain hemorrhage |
 
-## 작업 흐름
-1. 영상 유형 확인 (X-ray/CT/MRI)
-2. 촬영 부위 파악
-3. 해당 분석 도구 호출
-4. 이상 소견 리포트 생성
+## Workflow
+1. Identify imaging type (X-ray/CT/MRI)
+2. Determine scan location
+3. Call appropriate analysis tool
+4. Generate abnormality report
 
-## 영상 유형별 적용
+## Application by Imaging Type
 
 ### X-ray
-| 부위 | 주요 확인 사항 |
-|------|---------------|
-| 척추 | 디스크 간격, 골극, 정렬 |
-| 흉부 | 폐렴, 종양, 심비대 |
-| 관절 | 골절, 관절염, 탈구 |
-| 사지 | 골절, 골밀도 |
+| Region | Key Assessments |
+|--------|-----------------|
+| Spine | Disc spacing, osteophytes, alignment |
+| Chest | Pneumonia, tumors, cardiomegaly |
+| Joints | Fractures, arthritis, dislocation |
+| Extremities | Fractures, bone density |
 
 ### MRI
-| 부위 | 주요 확인 사항 |
-|------|---------------|
-| 척추 | 디스크 탈출, 신경 압박 |
-| 뇌 | 종양, 경색, 출혈 |
-| 관절 | 인대, 연골 손상 |
+| Region | Key Assessments |
+|--------|-----------------|
+| Spine | Disc herniation, nerve compression |
+| Brain | Tumors, infarction, hemorrhage |
+| Joints | Ligament, cartilage damage |
 
 ### CT
-| 부위 | 주요 확인 사항 |
-|------|---------------|
-| 뇌 | 출혈, 경색, 종양 |
-| 복부 | 장기 이상, 결석 |
-| 흉부 | 폐색전, 대동맥 |
+| Region | Key Assessments |
+|--------|-----------------|
+| Brain | Hemorrhage, infarction, tumors |
+| Abdomen | Organ abnormalities, stones |
+| Chest | Pulmonary embolism, aorta |
 
-## 응답 형식
-- 영상 유형 및 촬영 부위
-- 정상/이상 소견 구분
-- 이상 소견 상세 설명
-- 추가 검사 권고 (필요시)
+## Response Format
+- Imaging type and scan location
+- Normal/abnormal findings differentiation
+- Detailed explanation of abnormalities
+- Additional testing recommendations (if needed)
