@@ -277,29 +277,119 @@ class ToolRegistry:
 """
         return result
 
-    # === 약물 옵션 ===
+    # === Medication Options (RxNorm API) ===
     def _get_medication_options(self, diagnosis: str, allergies: list = None) -> str:
-        """약물 옵션 조회"""
-        medications = self.data_source.get_medication_options(diagnosis, allergies or [])
+        """Get medication options using RxNorm API"""
+        from backend.services.rxnorm_api import rxnorm_client
+        from backend.logger import get_logger
 
-        result = f"""## 약물 치료 옵션
+        logger = get_logger("tools.medication")
+        allergies = allergies or []
 
-**진단명**: {diagnosis}
+        # Map diagnosis to common drug queries
+        drug_queries = self._get_drug_queries_for_diagnosis(diagnosis)
 
-### 1차 약물
+        if not drug_queries:
+            logger.warning(f"No drug queries found for diagnosis: {diagnosis}")
+            # Fallback to mock data
+            medications = self.data_source.get_medication_options(diagnosis, allergies)
+            return self._format_mock_medications(diagnosis, medications)
+
+        result = f"""## Medication Treatment Options (via RxNorm API)
+
+**Diagnosis**: {diagnosis}
+
+### Primary Medications (FDA-approved)
+"""
+
+        found_any = False
+        for query in drug_queries[:3]:  # Top 3 drug types
+            logger.info(f"Searching RxNorm for: {query}")
+            drugs = rxnorm_client.search_drugs(query)
+
+            if drugs:
+                found_any = True
+                for drug in drugs[:2]:  # Top 2 per category
+                    drug_name = drug.get('name', 'Unknown')
+                    rxcui = drug.get('rxcui', 'N/A')
+
+                    # Check for allergies
+                    if any(allergy.lower() in drug_name.lower() for allergy in allergies):
+                        continue
+
+                    # Get drug details
+                    drug_info = rxnorm_client.get_drug_info(rxcui)
+
+                    result += f"""
+**{drug_name}**
+- RxCUI: {rxcui}
+- Type: {drug_info.get('tty', 'N/A') if drug_info else 'N/A'}
+- Note: Consult healthcare provider for dosage and usage
+"""
+
+                    # Get interactions if available
+                    interactions = rxnorm_client.get_drug_interactions(rxcui)
+                    if interactions:
+                        result += f"- ⚠️ Known interactions: {len(interactions)} found\n"
+
+        if not found_any:
+            logger.warning(f"No drugs found via RxNorm API, using fallback")
+            # Fallback to mock data
+            medications = self.data_source.get_medication_options(diagnosis, allergies)
+            return self._format_mock_medications(diagnosis, medications)
+
+        result += """
+
+---
+⚠️ **Disclaimer**: This information is from the FDA RxNorm database. Always consult with a healthcare professional before taking any medication.
+"""
+
+        return result
+
+    def _get_drug_queries_for_diagnosis(self, diagnosis: str) -> list:
+        """Map diagnosis to drug search queries"""
+        diagnosis_lower = diagnosis.lower()
+
+        # Common diagnosis to drug mapping
+        drug_map = {
+            "disc herniation": ["ibuprofen", "naproxen", "celecoxib"],
+            "herniated disc": ["ibuprofen", "naproxen", "celecoxib"],
+            "back pain": ["ibuprofen", "acetaminophen", "naproxen"],
+            "arthritis": ["ibuprofen", "naproxen", "celecoxib"],
+            "headache": ["acetaminophen", "ibuprofen", "aspirin"],
+            "migraine": ["sumatriptan", "ibuprofen", "acetaminophen"],
+            "knee pain": ["ibuprofen", "naproxen", "acetaminophen"],
+        }
+
+        for key, drugs in drug_map.items():
+            if key in diagnosis_lower:
+                return drugs
+
+        # Default pain medications
+        return ["ibuprofen", "acetaminophen"]
+
+    def _format_mock_medications(self, diagnosis: str, medications: dict) -> str:
+        """Format mock medication data (fallback)"""
+        result = f"""## Medication Treatment Options (Fallback Data)
+
+**Diagnosis**: {diagnosis}
+
+### Primary Medications
 """
         for med in medications['primary']:
             result += f"""
 **{med['name']}**
-- 성분: {med['ingredient']}
-- 용법: {med['dosage']}
-- 효과: {med['effect']}
-- 주의사항: {med['warning']}
+- Ingredient: {med['ingredient']}
+- Dosage: {med['dosage']}
+- Effect: {med['effect']}
+- Warning: {med['warning']}
 """
 
-        result += "\n### 보조 약물\n"
+        result += "\n### Secondary Medications\n"
         for med in medications['secondary']:
             result += f"- {med['name']}: {med['effect']}\n"
+
+        result += "\n⚠️ **Note**: This is demo data. Real data unavailable.\n"
 
         return result
 

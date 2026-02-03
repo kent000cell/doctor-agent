@@ -17,6 +17,7 @@ AI Doctor Agent is a medical AI consultation system built following **Agent Skil
 - ⚡ **Real-time Streaming**: Live diagnostic process via SSE
 - 🛠️ **10 Medical Tools**: Systematic diagnosis via Function Calling
 - 📚 **4 Specialized Skills**: Symptom analysis, imaging, assessment, treatment
+- 💊 **RxNorm API Integration**: Real FDA-approved drug information from US National Library of Medicine
 
 ⚠️ **Disclaimer**: This system is an AI-assisted diagnostic demo and does not replace actual medical diagnosis.
 
@@ -79,7 +80,7 @@ AI Doctor Agent is a medical AI consultation system built following **Agent Skil
 - **Framework**: FastAPI 0.100+
 - **LLM**: OpenAI GPT-4o (Function Calling + Vision)
 - **Streaming**: Server-Sent Events (SSE)
-- **Data**: Mock Data Source (for prototype)
+- **Medical Data**: RxNorm API (FDA drug database) + Mock Data Source
 
 ### Frontend
 - **UI**: Vanilla JavaScript + HTML5
@@ -180,9 +181,35 @@ doctor-agent/
 - Risk factor evaluation (age, underlying conditions)
 
 ### 4. Treatment Recommendations
-- Medication options (ingredients, dosage, warnings)
+- Medication options via **RxNorm API** (real FDA-approved drugs with RxCUI codes)
+- Drug interaction checking and allergy filtering
 - Surgical options (methods, pros/cons, recovery time)
 - Lifestyle recommendations
+
+---
+
+## RxNorm API Integration
+
+The system integrates with the **RxNorm API** from the U.S. National Library of Medicine to provide real FDA-approved drug information.
+
+**Features:**
+- ✅ Drug search by name (returns RxCUI codes)
+- ✅ Detailed drug information (type, synonyms, properties)
+- ✅ Drug interaction checking
+- ✅ Allergy filtering
+- ✅ Graceful fallback to mock data if API unavailable
+
+**Example:**
+```python
+# Search for ibuprofen
+drugs = rxnorm_client.search_drugs("ibuprofen")
+# Returns: [
+#   {"rxcui": "1100070", "name": "ibuprofen 800 MG Oral Tablet", "tty": "SBD"},
+#   ...
+# ]
+```
+
+**API Documentation:** https://lhncbc.nlm.nih.gov/RxNav/APIs/
 
 ---
 
@@ -252,9 +279,10 @@ PORT=8000                     # Server port
 - [x] SSE streaming
 - [x] Docker containerization
 - [x] Test suite
+- [x] Real medical data API integration (RxNorm for medications)
 - [ ] PostgreSQL integration (conversation history)
 - [ ] User authentication (JWT)
-- [ ] Real medical data API integration
+- [ ] Additional medical APIs (imaging, labs)
 - [ ] RAG-based medical knowledge base
 
 ---
