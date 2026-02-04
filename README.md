@@ -11,15 +11,15 @@
 
 AI Doctor Agent is a medical AI consultation system built following **Agent Skills specification**. It analyzes patient symptoms, interprets medical images, and recommends appropriate treatments using AI technology.
 
-**Key Features:**
-- 🏥 **Multimodal Diagnosis**: Text symptoms + Image analysis (GPT-4o Vision)
-- 🔧 **Agent Skills Compliant**: Progressive Disclosure pattern implementation
-- ⚡ **Real-time Streaming**: Live diagnostic process via SSE
-- 🛠️ **10 Medical Tools**: Systematic diagnosis via Function Calling
-- 📚 **4 Specialized Skills**: Symptom analysis, imaging, assessment, treatment
-- 💊 **RxNorm API Integration**: Real FDA-approved drug information from US National Library of Medicine
+Key Features:
+-  Multimodal Diagnosis: Text symptoms + Image analysis (GPT-4o Vision)
+-  Agent Skills Compliant: Progressive Disclosure pattern implementation
+-  Real-time Streaming: Live diagnostic process via SSE
+-  10 Medical Tools: Systematic diagnosis via Function Calling
+-  4 Specialized Skills: Symptom analysis, imaging, assessment, treatment
+-  RxNorm API Integration: Real FDA-approved drug information from US National Library of Medicine
 
-⚠️ **Disclaimer**: This system is an AI-assisted diagnostic demo and does not replace actual medical diagnosis.
+ **Disclaimer**: This system is an AI-assisted diagnostic demo and does not replace actual medical diagnosis.
 
 ---
 
@@ -192,14 +192,14 @@ doctor-agent/
 
 The system integrates with the **RxNorm API** from the U.S. National Library of Medicine to provide real FDA-approved drug information.
 
-**Features:**
-- ✅ Drug search by name (returns RxCUI codes)
-- ✅ Detailed drug information (type, synonyms, properties)
-- ✅ Drug interaction checking
-- ✅ Allergy filtering
-- ✅ Graceful fallback to mock data if API unavailable
+Features:
+-  Drug search by name (returns RxCUI codes)
+-  Detailed drug information (type, synonyms, properties)
+-  Drug interaction checking
+-  Allergy filtering
+-  Graceful fallback to mock data if API unavailable
 
-**Example:**
+Example:
 ```python
 # Search for ibuprofen
 drugs = rxnorm_client.search_drugs("ibuprofen")
@@ -295,7 +295,7 @@ Apache License 2.0
 
 ## Disclaimer
 
-⚠️ **This system is a prototype for educational and research purposes.**
+**This system is a prototype for educational and research purposes.**
 
 - Does not replace actual medical diagnosis
 - For emergencies, call 911 or visit nearest emergency room immediately
